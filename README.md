@@ -129,4 +129,11 @@ Dieses Tool nutzt das Licensing-System von [FlessingLabs](https://flessinglabs.c
 
 ---
 
+## Support & Community
+
+- **Bug melden / Feature anfragen** → [Issues](https://github.com/worker2000/gta-rp-bankingtool/issues)
+- **Fragen & Diskussionen** → [Discussions](https://github.com/worker2000/gta-rp-bankingtool/discussions)
+
+---
+
 *Developed by [FlessingLabs](https://flessinglabs.com)*
