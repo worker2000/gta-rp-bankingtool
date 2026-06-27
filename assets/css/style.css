@@ -1,0 +1,356 @@
+/**
+ * PSB / Fortis Finance – Dark Theme Styles
+ */
+
+/* ══════════════════════════════════════════
+   BANK-THEMES (CSS Custom Properties)
+   body.bank-psb → Blau (Standard)
+   body.bank-ff  → Gold/Navy
+   ══════════════════════════════════════════ */
+
+:root {
+    --bank-primary:      #0d6efd;
+    --bank-primary-rgb:  13, 110, 253;
+    --bank-glow:         rgba(13, 110, 253, 0.25);
+    --bank-nav-bg:       #0f1923;
+    --bank-nav-border:   #1a2744;
+
+    --psb-secondary:  #6c757d;
+    --psb-success:    #198754;
+    --psb-warning:    #ffc107;
+    --psb-danger:     #dc3545;
+    --psb-dark:       #212529;
+    --psb-darker:     #1a1d21;
+    --psb-border:     #495057;
+    --psb-text:       #e9ecef;
+    --psb-text-muted: #adb5bd;
+}
+
+/* Fortis Finance Theme */
+body.bank-ff {
+    --bank-primary:      #c9a227;
+    --bank-primary-rgb:  201, 162, 39;
+    --bank-glow:         rgba(201, 162, 39, 0.25);
+    --bank-nav-bg:       #0e1520;
+    --bank-nav-border:   #1a2744;
+    --psb-darker:        #0b1019;
+    --psb-dark:          #111827;
+    --psb-border:        #1e2d44;
+    --psb-text:          #dde5f0;
+    --psb-text-muted:    #8a9db8;
+}
+
+body {
+    background-color: var(--psb-darker);
+    color: var(--psb-text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+/* ══ Navbar ══ */
+.navbar.bank-navbar {
+    background-color: var(--bank-nav-bg) !important;
+    border-bottom: 1px solid var(--bank-nav-border) !important;
+}
+
+.navbar-brand .bank-accent {
+    color: var(--bank-primary);
+}
+
+/* Aktiver Nav-Link: Unterstrich in Bank-Farbe */
+.navbar .nav-link.active {
+    color: #fff !important;
+    border-bottom: 2px solid var(--bank-primary);
+    padding-bottom: calc(0.5rem - 2px);
+}
+
+/* Bank-Badge in der Navbar */
+.bank-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    background: var(--bank-primary);
+    color: #000;
+    opacity: 0.9;
+    vertical-align: middle;
+}
+
+body.bank-ff .bank-badge {
+    color: #0b0f1a;
+}
+
+/* ══ Cards ══ */
+.card {
+    background-color: var(--psb-dark);
+    border-color: var(--psb-border);
+}
+
+.card-header {
+    background-color: rgba(0,0,0,0.2);
+    border-bottom-color: var(--psb-border);
+}
+
+/* ══ Tables ══ */
+.table {
+    --bs-table-bg: var(--psb-dark);
+    --bs-table-border-color: var(--psb-border);
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(255,255,255,0.05);
+}
+
+/* ══ Forms ══ */
+.form-control, .form-select {
+    background-color: var(--psb-darker);
+    border-color: var(--psb-border);
+    color: var(--psb-text);
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: var(--psb-darker);
+    border-color: var(--bank-primary);
+    color: var(--psb-text);
+    box-shadow: 0 0 0 0.25rem var(--bank-glow);
+}
+
+.form-control::placeholder {
+    color: var(--psb-text-muted);
+}
+
+/* ══ Buttons (primär = Bank-Farbe) ══ */
+.btn-primary {
+    --bs-btn-bg:           var(--bank-primary);
+    --bs-btn-border-color: var(--bank-primary);
+    --bs-btn-hover-bg:     color-mix(in srgb, var(--bank-primary) 85%, #000);
+    --bs-btn-hover-border-color: color-mix(in srgb, var(--bank-primary) 85%, #000);
+    --bs-btn-color:        #fff;
+    --bs-btn-hover-color:  #fff;
+}
+
+body.bank-ff .btn-primary {
+    --bs-btn-color:       #0b0f1a;
+    --bs-btn-hover-color: #0b0f1a;
+}
+
+.btn-outline-primary {
+    --bs-btn-color:        var(--bank-primary);
+    --bs-btn-border-color: var(--bank-primary);
+    --bs-btn-hover-bg:     var(--bank-primary);
+    --bs-btn-hover-color:  #fff;
+}
+
+body.bank-ff .btn-outline-primary {
+    --bs-btn-hover-color: #0b0f1a;
+}
+
+/* ══ Badge colors ══ */
+.bg-orange {
+    background-color: #fd7e14 !important;
+}
+
+/* ══ Status badges ══ */
+.badge {
+    font-weight: 500;
+    padding: 0.5em 0.8em;
+}
+
+/* ══ KPI Cards ══ */
+.kpi-card {
+    border-left: 4px solid var(--bank-primary);
+}
+
+.kpi-card.warning {
+    border-left-color: var(--psb-warning);
+}
+
+.kpi-card.danger {
+    border-left-color: var(--psb-danger);
+}
+
+.kpi-card.success {
+    border-left-color: var(--psb-success);
+}
+
+.kpi-value {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.kpi-label {
+    color: var(--psb-text-muted);
+    font-size: 0.875rem;
+}
+
+/* ══ Links ══ */
+a {
+    color: var(--bank-primary);
+}
+a:hover {
+    color: color-mix(in srgb, var(--bank-primary) 75%, #fff);
+}
+
+/* ══ Copy button ══ */
+.copy-btn {
+    position: relative;
+}
+
+.copy-btn.copied::after {
+    content: 'Kopiert!';
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--psb-success);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    animation: fadeOut 1.5s forwards;
+}
+
+@keyframes fadeOut {
+    0%   { opacity: 1; }
+    70%  { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* ══ Tabs ══ */
+.nav-tabs {
+    border-bottom-color: var(--psb-border);
+}
+
+.nav-tabs .nav-link {
+    color: var(--psb-text-muted);
+    border-color: transparent;
+}
+
+.nav-tabs .nav-link:hover {
+    border-color: var(--psb-border);
+    color: var(--psb-text);
+}
+
+.nav-tabs .nav-link.active {
+    background-color: var(--psb-dark);
+    border-color: var(--psb-border) var(--psb-border) var(--psb-dark);
+    color: var(--psb-text);
+}
+
+/* ══ Action buttons ══ */
+.btn-action {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+/* ══ Timeline / Audit ══ */
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--psb-border);
+}
+
+.timeline-item {
+    position: relative;
+    padding-bottom: 1.5rem;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -24px;
+    top: 4px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--bank-primary);
+    border: 2px solid var(--psb-dark);
+}
+
+/* ══ Responsive ══ */
+@media (max-width: 768px) {
+    .kpi-value {
+        font-size: 1.5rem;
+    }
+
+    .table-responsive {
+        font-size: 0.875rem;
+    }
+}
+
+/* ══ Print ══ */
+@media print {
+    body {
+        background: white;
+        color: black;
+    }
+
+    .navbar, footer, .btn, .no-print {
+        display: none !important;
+    }
+
+    .card {
+        border: 1px solid #ddd;
+        background: white;
+    }
+}
+
+/* ══ Overdue highlighting ══ */
+.overdue-warning {
+    background-color: rgba(255, 193, 7, 0.1) !important;
+}
+
+.overdue-danger {
+    background-color: rgba(220, 53, 69, 0.1) !important;
+}
+
+/* ══ Search highlight ══ */
+.search-highlight {
+    background-color: rgba(255, 193, 7, 0.3);
+    padding: 0 2px;
+    border-radius: 2px;
+}
+
+/* ══ Empty state ══ */
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: var(--psb-text-muted);
+}
+
+.empty-state i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+/* ══ Loading spinner ══ */
+.loading-spinner {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid var(--psb-text-muted);
+    border-radius: 50%;
+    border-top-color: var(--bank-primary);
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

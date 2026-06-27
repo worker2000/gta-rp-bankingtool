@@ -1,0 +1,21 @@
+# Konfiguration mit echten Credentials – niemals committen!
+config/database.php
+
+# Laufzeit-Daten
+storage/
+uploads/documents/
+logs/
+
+# Claude Code interne Dateien
+.claude/
+
+# Lokale Einstellungen
+database/settings.local.json
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/

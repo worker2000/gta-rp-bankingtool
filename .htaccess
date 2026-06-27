@@ -1,0 +1,32 @@
+# PSB Kreditverwaltung - Apache Konfiguration
+
+# Deny access to sensitive directories
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Deny access to config files
+    RewriteRule ^config/ - [F,L]
+
+    # Deny access to class files directly
+    RewriteRule ^classes/ - [F,L]
+
+    # Deny access to database directory
+    RewriteRule ^database/ - [F,L]
+</IfModule>
+
+# Prevent directory listing
+Options -Indexes
+
+# PHP settings
+<IfModule mod_php.c>
+    php_value upload_max_filesize 10M
+    php_value post_max_size 10M
+    php_value max_execution_time 60
+</IfModule>
+
+# Security headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+#    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>
