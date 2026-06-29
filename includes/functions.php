@@ -3,6 +3,43 @@
  * PSB / Fortis Finance – Hilfsfunktionen
  */
 
+// Globales Übersetzungs-Array; wird via loadLanguage() befüllt
+$GLOBALS['translations'] = [];
+
+/**
+ * Lädt die Sprachdatei für die gegebene Locale.
+ * Fallback: Deutsch.
+ */
+function loadLanguage(string $locale = 'de'): void {
+    $allowed = ['de', 'en'];
+    if (!in_array($locale, $allowed, true)) {
+        $locale = 'de';
+    }
+    $file = __DIR__ . '/../lang/' . $locale . '.php';
+    if (!file_exists($file)) {
+        $file = __DIR__ . '/../lang/de.php';
+    }
+    $GLOBALS['translations'] = require $file;
+}
+
+/**
+ * Übersetzt einen Schlüssel. Gibt den Schlüssel zurück, wenn keine Übersetzung vorhanden.
+ * Optionaler $fallback wird zurückgegeben, wenn Schlüssel nicht gefunden.
+ */
+function t(string $key, string $fallback = ''): string {
+    if (!empty($GLOBALS['translations'][$key])) {
+        return $GLOBALS['translations'][$key];
+    }
+    return $fallback !== '' ? $fallback : $key;
+}
+
+/**
+ * Gibt die aktuelle Sprache zurück (aus Session).
+ */
+function currentLang(): string {
+    return $_SESSION['lang'] ?? 'de';
+}
+
 /**
  * Gibt die aktuelle Bank-ID zurück (aus Session)
  */
@@ -129,10 +166,10 @@ function calculateSchedule(
 
 
 /**
- * Übersetzt Loan-Status
+ * Übersetzt Loan-Status (sprachbewusst)
  */
 function translateLoanStatus(string $status): string {
-    return match($status) {
+    $fallbacks = [
         'APPLICATION_RECEIVED' => 'Antrag eingegangen',
         'IN_REVIEW'            => 'In Prüfung',
         'APPROVED'             => 'Genehmigt',
@@ -145,8 +182,8 @@ function translateLoanStatus(string $status): string {
         'REPOSSESSION'         => 'Sicherstellung',
         'CLOSED'               => 'Abgeschlossen',
         'WITHDRAWN'            => 'Widerrufen',
-        default                => $status
-    };
+    ];
+    return t('status.' . $status, $fallbacks[$status] ?? $status);
 }
 
 /**
@@ -168,16 +205,16 @@ function getStatusBadgeClass(string $status): string {
 }
 
 /**
- * Übersetzt Produkttyp
+ * Übersetzt Produkttyp (sprachbewusst)
  */
 function translateProductType(string $type): string {
-    return match($type) {
+    $fallbacks = [
         'AUTO'      => 'Autokredit',
         'BUSINESS'  => 'Geschäftskredit',
         'PRIVATE'   => 'Privatkredit',
         'INSURANCE' => 'Krankenversicherung',
-        default     => $type
-    };
+    ];
+    return t('product.' . $type, $fallbacks[$type] ?? $type);
 }
 
 /**

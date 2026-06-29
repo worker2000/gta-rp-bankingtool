@@ -57,28 +57,19 @@ $loans = Database::fetchAll("
     LIMIT {$perPage} OFFSET {$offset}
 ", $params);
 
-// Status-Liste für Filter
+// Status-Liste für Filter (sprachbewusst via translateLoanStatus)
 $statuses = [
-    'APPLICATION_RECEIVED' => 'Antrag eingegangen',
-    'IN_REVIEW' => 'In Prüfung',
-    'APPROVED' => 'Genehmigt',
-    'REJECTED' => 'Abgelehnt',
-    'CONTRACT_CREATED' => 'Vertrag erstellt',
-    'ACTIVE' => 'Aktiv',
-    'DUNNING_L1' => 'Mahnung Stufe 1',
-    'DUNNING_L2' => 'Mahnung Stufe 2',
-    'TERMINATED' => 'Gekündigt',
-    'REPOSSESSION' => 'Sicherstellung',
-    'CLOSED' => 'Abgeschlossen',
-    'WITHDRAWN' => 'Widerrufen'
+    'APPLICATION_RECEIVED', 'IN_REVIEW', 'APPROVED', 'REJECTED',
+    'CONTRACT_CREATED', 'ACTIVE', 'DUNNING_L1', 'DUNNING_L2',
+    'TERMINATED', 'REPOSSESSION', 'CLOSED', 'WITHDRAWN'
 ];
 ?>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h4><i class="bi bi-file-earmark-text me-2"></i>Kredite</h4>
+    <h4><i class="bi bi-file-earmark-text me-2"></i><?= t('loans.title') ?></h4>
     <?php if (Auth::can('loans', 'create')): ?>
     <a href="<?= APP_URL ?>/pages/loans/create.php" class="btn btn-primary">
-        <i class="bi bi-plus-circle me-2"></i>Neuer Kredit
+        <i class="bi bi-plus-circle me-2"></i><?= t('loans.new') ?>
     </a>
     <?php endif; ?>
 </div>
@@ -92,29 +83,29 @@ $statuses = [
                     <span class="input-group-text"><i class="bi bi-search"></i></span>
                     <input type="text" class="form-control" name="search"
                            value="<?= e($search) ?>"
-                           placeholder="Aktenzeichen, Kreditnehmer...">
+                           placeholder="<?= t('loans.search_placeholder') ?>">
                 </div>
             </div>
             <div class="col-md-3">
                 <select class="form-select" name="status">
-                    <option value="">Alle Status</option>
-                    <?php foreach ($statuses as $key => $label): ?>
-                    <option value="<?= $key ?>" <?= $status === $key ? 'selected' : '' ?>><?= $label ?></option>
+                    <option value=""><?= t('loans.all_statuses') ?></option>
+                    <?php foreach ($statuses as $key): ?>
+                    <option value="<?= $key ?>" <?= $status === $key ? 'selected' : '' ?>><?= translateLoanStatus($key) ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
             <div class="col-md-2">
                 <select class="form-select" name="product">
-                    <option value="">Alle Produkte</option>
-                    <option value="AUTO" <?= $product === 'AUTO' ? 'selected' : '' ?>>Autokredit</option>
-                    <option value="PRIVATE" <?= $product === 'PRIVATE' ? 'selected' : '' ?>>Privatkredit</option>
-                    <option value="BUSINESS" <?= $product === 'BUSINESS' ? 'selected' : '' ?>>Geschäftskredit</option>
+                    <option value=""><?= t('loans.all_products') ?></option>
+                    <option value="AUTO" <?= $product === 'AUTO' ? 'selected' : '' ?>><?= t('product.AUTO', 'Autokredit') ?></option>
+                    <option value="PRIVATE" <?= $product === 'PRIVATE' ? 'selected' : '' ?>><?= t('product.PRIVATE', 'Privatkredit') ?></option>
+                    <option value="BUSINESS" <?= $product === 'BUSINESS' ? 'selected' : '' ?>><?= t('product.BUSINESS', 'Geschäftskredit') ?></option>
                 </select>
             </div>
             <div class="col-md-3">
-                <button type="submit" class="btn btn-outline-primary me-2">Filtern</button>
+                <button type="submit" class="btn btn-outline-primary me-2"><?= t('loans.filter') ?></button>
                 <?php if ($search || $status || $product): ?>
-                <a href="<?= APP_URL ?>/pages/loans/index.php" class="btn btn-outline-secondary">Zurücksetzen</a>
+                <a href="<?= APP_URL ?>/pages/loans/index.php" class="btn btn-outline-secondary"><?= t('loans.reset') ?></a>
                 <?php endif; ?>
             </div>
         </form>
@@ -127,9 +118,9 @@ $statuses = [
         <?php if (empty($loans)): ?>
         <div class="empty-state">
             <i class="bi bi-file-earmark-x"></i>
-            <p>Keine Kredite gefunden</p>
+            <p><?= t('loans.none_found') ?></p>
             <?php if (Auth::can('loans', 'create')): ?>
-            <a href="<?= APP_URL ?>/pages/loans/create.php" class="btn btn-primary">Ersten Kredit anlegen</a>
+            <a href="<?= APP_URL ?>/pages/loans/create.php" class="btn btn-primary"><?= t('loans.create_first') ?></a>
             <?php endif; ?>
         </div>
         <?php else: ?>
@@ -137,14 +128,14 @@ $statuses = [
             <table class="table table-hover mb-0">
                 <thead>
                     <tr>
-                        <th>Aktenzeichen</th>
-                        <th>Kreditnehmer</th>
-                        <th>Produkt</th>
-                        <th>Kreditsumme</th>
-                        <th>Restschuld</th>
-                        <th>Status</th>
-                        <th>Verzug</th>
-                        <th class="text-end">Aktionen</th>
+                        <th><?= t('loans.file_number') ?></th>
+                        <th><?= t('loans.borrower') ?></th>
+                        <th><?= t('loans.product_type') ?></th>
+                        <th><?= t('loans.loan_amount') ?></th>
+                        <th><?= t('loans.outstanding') ?></th>
+                        <th><?= t('loans.status') ?></th>
+                        <th><?= t('loans.overdue') ?></th>
+                        <th class="text-end"><?= t('loans.actions') ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -163,7 +154,7 @@ $statuses = [
                         </td>
                         <td>
                             <?php if ($loan['product_type'] === 'INSURANCE'): ?>
-                            <span class="text-danger"><i class="bi bi-heart-pulse me-1"></i>Krankenversicherung</span>
+                            <span class="text-danger"><i class="bi bi-heart-pulse me-1"></i><?= t('product.INSURANCE', 'Krankenversicherung') ?></span>
                             <?php else: ?>
                             <?= translateProductType($loan['product_type']) ?>
                             <?php endif; ?>
@@ -179,13 +170,13 @@ $statuses = [
                                 $loanRealOutstanding = round($loan['total_amount'] - $loan['total_paid']);
                                 if ($loan['status'] !== 'CLOSED' && $loanRealOutstanding <= 200 && $loan['total_paid'] > 0):
                             ?>
-                            <br><span class="badge bg-success mt-1"><i class="bi bi-check-circle me-1"></i>Mögl. abgeschlossen</span>
+                            <br><span class="badge bg-success mt-1"><i class="bi bi-check-circle me-1"></i><?= t('loans.possibly_closed') ?></span>
                             <?php endif; ?>
                         </td>
                         <td>
                             <?php if ($loan['days_overdue'] > 0): ?>
                             <span class="badge <?= $loan['days_overdue'] > 14 ? 'bg-danger' : 'bg-warning' ?>">
-                                <?= $loan['days_overdue'] ?> Tage
+                                <?= $loan['days_overdue'] ?> <?= t('loans.days') ?>
                             </span>
                             <?php else: ?>
                             <span class="text-muted">-</span>
@@ -215,7 +206,7 @@ $statuses = [
             <nav>
                 <ul class="pagination pagination-sm mb-0 justify-content-center">
                     <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
-                        <a class="page-link" href="?page=<?= $page - 1 ?>&search=<?= urlencode($search) ?>&status=<?= $status ?>&product=<?= $product ?>">Zurück</a>
+                        <a class="page-link" href="?page=<?= $page - 1 ?>&search=<?= urlencode($search) ?>&status=<?= $status ?>&product=<?= $product ?>"><?= t('pagination.back') ?></a>
                     </li>
                     <?php for ($i = max(1, $page - 2); $i <= min($totalPages, $page + 2); $i++): ?>
                     <li class="page-item <?= $i === $page ? 'active' : '' ?>">
@@ -223,7 +214,7 @@ $statuses = [
                     </li>
                     <?php endfor; ?>
                     <li class="page-item <?= $page >= $totalPages ? 'disabled' : '' ?>">
-                        <a class="page-link" href="?page=<?= $page + 1 ?>&search=<?= urlencode($search) ?>&status=<?= $status ?>&product=<?= $product ?>">Weiter</a>
+                        <a class="page-link" href="?page=<?= $page + 1 ?>&search=<?= urlencode($search) ?>&status=<?= $status ?>&product=<?= $product ?>"><?= t('pagination.next') ?></a>
                     </li>
                 </ul>
             </nav>
@@ -234,7 +225,7 @@ $statuses = [
 </div>
 
 <div class="mt-3 text-muted small">
-    Gesamt: <?= $totalCount ?> Kredite
+    <?= t('loans.total') ?>: <?= $totalCount ?> <?= t('loans.title') ?>
 </div>
 
 <?php require_once __DIR__ . '/../../includes/footer.php'; ?>

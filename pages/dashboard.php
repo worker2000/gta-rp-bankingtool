@@ -93,7 +93,7 @@ if ($bid === 2) {
 
 <div class="row mb-4">
     <div class="col-12">
-        <h4><i class="bi bi-speedometer2 me-2"></i>Dashboard</h4>
+        <h4><i class="bi bi-speedometer2 me-2"></i><?= t('dashboard.title') ?></h4>
     </div>
 </div>
 
@@ -103,7 +103,7 @@ if ($bid === 2) {
         <div class="card kpi-card success">
             <div class="card-body">
                 <div class="kpi-value text-success"><?= $stats['active_loans'] ?></div>
-                <div class="kpi-label">Aktive Kredite</div>
+                <div class="kpi-label"><?= t('dashboard.active_loans') ?></div>
             </div>
         </div>
     </div>
@@ -111,7 +111,7 @@ if ($bid === 2) {
         <div class="card kpi-card warning">
             <div class="card-body">
                 <div class="kpi-value text-warning"><?= $stats['dunning_loans'] ?></div>
-                <div class="kpi-label">In Mahnung</div>
+                <div class="kpi-label"><?= t('dashboard.in_dunning') ?></div>
             </div>
         </div>
     </div>
@@ -119,7 +119,7 @@ if ($bid === 2) {
         <div class="card kpi-card danger">
             <div class="card-body">
                 <div class="kpi-value text-danger"><?= $stats['terminated_loans'] ?></div>
-                <div class="kpi-label">Gekündigt</div>
+                <div class="kpi-label"><?= t('dashboard.terminated') ?></div>
             </div>
         </div>
     </div>
@@ -127,7 +127,7 @@ if ($bid === 2) {
         <div class="card kpi-card">
             <div class="card-body">
                 <div class="kpi-value"><?= formatMoney($stats['total_outstanding']) ?></div>
-                <div class="kpi-label">Offene Forderungen</div>
+                <div class="kpi-label"><?= t('dashboard.outstanding_balance') ?></div>
             </div>
         </div>
     </div>
@@ -138,7 +138,7 @@ if ($bid === 2) {
         <div class="card kpi-card">
             <div class="card-body">
                 <div class="kpi-value"><?= $dueTodayCount ?></div>
-                <div class="kpi-label">Heute fällige Raten</div>
+                <div class="kpi-label"><?= t('dashboard.due_today') ?></div>
             </div>
         </div>
     </div>
@@ -148,7 +148,7 @@ if ($bid === 2) {
                 <div class="kpi-value <?= $stats['unmatched_transactions'] > 0 ? 'text-warning' : '' ?>">
                     <?= $stats['unmatched_transactions'] ?>
                 </div>
-                <div class="kpi-label">Unzugeordnete Buchungen</div>
+                <div class="kpi-label"><?= t('dashboard.unmatched') ?></div>
             </div>
         </div>
     </div>
@@ -158,7 +158,7 @@ if ($bid === 2) {
                 <div class="kpi-value <?= $stats['ambiguous_transactions'] > 0 ? 'text-warning' : '' ?>">
                     <?= $stats['ambiguous_transactions'] ?>
                 </div>
-                <div class="kpi-label">Mehrdeutige Buchungen</div>
+                <div class="kpi-label"><?= t('dashboard.ambiguous') ?></div>
             </div>
         </div>
     </div>
@@ -169,27 +169,27 @@ if ($bid === 2) {
     <div class="col-md-6">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <span><i class="bi bi-exclamation-triangle text-warning me-2"></i>Überfällige Raten</span>
+                <span><i class="bi bi-exclamation-triangle text-warning me-2"></i><?= t('dashboard.overdue_rates') ?></span>
                 <?php if (Auth::can('dunning', 'view')): ?>
-                <a href="<?= APP_URL ?>/pages/collections/index.php" class="btn btn-sm btn-outline-light">Alle anzeigen</a>
+                <a href="<?= APP_URL ?>/pages/collections/index.php" class="btn btn-sm btn-outline-light"><?= t('dashboard.view_all') ?></a>
                 <?php endif; ?>
             </div>
             <div class="card-body p-0">
                 <?php if (empty($overdueRates)): ?>
                 <div class="empty-state py-4">
                     <i class="bi bi-check-circle text-success"></i>
-                    <p class="mb-0">Keine überfälligen Raten</p>
+                    <p class="mb-0"><?= t('dashboard.no_overdue') ?></p>
                 </div>
                 <?php else: ?>
                 <div class="table-responsive">
                     <table class="table table-hover mb-0">
                         <thead>
                             <tr>
-                                <th>Aktenzeichen</th>
-                                <th>Kreditnehmer</th>
-                                <th>Fällig</th>
-                                <th>Betrag</th>
-                                <th>Tage</th>
+                                <th><?= t('dashboard.file_number') ?></th>
+                                <th><?= t('dashboard.borrower') ?></th>
+                                <th><?= t('dashboard.due_date') ?></th>
+                                <th><?= t('dashboard.amount') ?></th>
+                                <th><?= t('dashboard.days') ?></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -205,7 +205,7 @@ if ($bid === 2) {
                                 <td><?= formatMoney($rate['amount_outstanding']) ?></td>
                                 <td>
                                     <span class="badge <?= $rate['days_overdue'] > 14 ? 'bg-danger' : 'bg-warning' ?>">
-                                        <?= $rate['days_overdue'] ?> Tage
+                                        <?= $rate['days_overdue'] ?> <?= t('dashboard.days') ?>
                                     </span>
                                 </td>
                             </tr>
@@ -222,37 +222,37 @@ if ($bid === 2) {
     <div class="col-md-6">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <span><i class="bi bi-question-circle text-info me-2"></i>Offene Buchungen</span>
+                <span><i class="bi bi-question-circle text-info me-2"></i><?= t('dashboard.open_transactions') ?></span>
                 <?php if (Auth::can('import', 'match')): ?>
-                <a href="<?= APP_URL ?>/pages/import/index.php" class="btn btn-sm btn-outline-light">Zum Import</a>
+                <a href="<?= APP_URL ?>/pages/import/index.php" class="btn btn-sm btn-outline-light"><?= t('dashboard.to_import') ?></a>
                 <?php endif; ?>
             </div>
             <div class="card-body p-0">
                 <?php if (empty($unmatchedTransactions)): ?>
                 <div class="empty-state py-4">
                     <i class="bi bi-check-circle text-success"></i>
-                    <p class="mb-0">Alle Buchungen zugeordnet</p>
+                    <p class="mb-0"><?= t('dashboard.all_matched') ?></p>
                 </div>
                 <?php else: ?>
                 <div class="table-responsive">
                     <table class="table table-hover mb-0">
                         <thead>
                             <tr>
-                                <th>Datum</th>
-                                <th>Absender</th>
-                                <th>Betrag</th>
-                                <th>Status</th>
+                                <th><?= t('dashboard.date') ?></th>
+                                <th><?= t('dashboard.sender') ?></th>
+                                <th><?= t('dashboard.amount') ?></th>
+                                <th><?= t('dashboard.status') ?></th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($unmatchedTransactions as $tx): ?>
                             <tr>
                                 <td><?= formatDate($tx['transaction_date']) ?></td>
-                                <td><?= e(substr($tx['sender_name'] ?? 'Unbekannt', 0, 25)) ?></td>
+                                <td><?= e(substr($tx['sender_name'] ?? t('dashboard.unknown'), 0, 25)) ?></td>
                                 <td><?= formatMoney($tx['amount']) ?></td>
                                 <td>
                                     <span class="badge <?= $tx['match_status'] === 'AMBIGUOUS' ? 'bg-warning' : 'bg-secondary' ?>">
-                                        <?= $tx['match_status'] === 'AMBIGUOUS' ? 'Mehrdeutig' : 'Offen' ?>
+                                        <?= $tx['match_status'] === 'AMBIGUOUS' ? t('dashboard.ambiguous_label') : t('dashboard.open_label') ?>
                                     </span>
                                 </td>
                             </tr>
@@ -271,13 +271,13 @@ if ($bid === 2) {
 <div class="row g-3 mb-4">
     <?php if ($ffInsKpis): ?>
     <div class="col-12">
-        <h6 class="text-muted mb-3"><i class="bi bi-building me-2"></i>Fortis Finance – Zusatzprodukte</h6>
+        <h6 class="text-muted mb-3"><i class="bi bi-building me-2"></i><?= t('dashboard.ff_extra') ?></h6>
     </div>
     <div class="col-md-3">
         <div class="card kpi-card success">
             <div class="card-body">
                 <div class="kpi-value text-success"><?= $ffInsKpis['active_contracts'] ?? 0 ?></div>
-                <div class="kpi-label">KV Einzelverträge aktiv</div>
+                <div class="kpi-label"><?= t('dashboard.kv_active') ?></div>
             </div>
         </div>
     </div>
@@ -285,7 +285,7 @@ if ($bid === 2) {
         <div class="card kpi-card">
             <div class="card-body">
                 <div class="kpi-value"><?= $ffInsKpis['active_members'] ?? 0 ?></div>
-                <div class="kpi-label">KV Gruppen-Mitglieder</div>
+                <div class="kpi-label"><?= t('dashboard.kv_members') ?></div>
             </div>
         </div>
     </div>
@@ -295,7 +295,7 @@ if ($bid === 2) {
                 <div class="kpi-value <?= ($ffInsKpis['open_claims'] ?? 0) > 0 ? 'text-warning' : '' ?>">
                     <?= $ffInsKpis['open_claims'] ?? 0 ?>
                 </div>
-                <div class="kpi-label">Offene Leistungsanträge</div>
+                <div class="kpi-label"><?= t('dashboard.open_claims') ?></div>
             </div>
         </div>
     </div>
@@ -307,10 +307,10 @@ if ($bid === 2) {
                 <div class="kpi-value <?= ($sbKpis['overdue_boxes'] ?? 0) > 0 ? 'text-warning' : '' ?>">
                     <?= $sbKpis['active_boxes'] ?? 0 ?>
                     <?php if (($sbKpis['overdue_boxes'] ?? 0) > 0): ?>
-                    <small class="fs-6 text-warning"> / <?= $sbKpis['overdue_boxes'] ?> überfällig</small>
+                    <small class="fs-6 text-warning"> / <?= $sbKpis['overdue_boxes'] ?> <?= t('dashboard.overdue_label') ?></small>
                     <?php endif; ?>
                 </div>
-                <div class="kpi-label">Schließfächer aktiv</div>
+                <div class="kpi-label"><?= t('dashboard.safeboxes_active') ?></div>
             </div>
         </div>
     </div>
@@ -323,53 +323,53 @@ if ($bid === 2) {
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <i class="bi bi-lightning me-2"></i>Schnellzugriff
+                <i class="bi bi-lightning me-2"></i><?= t('dashboard.quick_actions') ?>
             </div>
             <div class="card-body">
                 <div class="row g-2">
                     <?php if (Auth::can('loans', 'create')): ?>
                     <div class="col-auto">
                         <a href="<?= APP_URL ?>/pages/loans/create.php" class="btn btn-primary">
-                            <i class="bi bi-plus-circle me-2"></i>Neuer Kredit
+                            <i class="bi bi-plus-circle me-2"></i><?= t('dashboard.new_loan') ?>
                         </a>
                     </div>
                     <?php endif; ?>
                     <?php if (Auth::can('borrowers', 'create')): ?>
                     <div class="col-auto">
                         <a href="<?= APP_URL ?>/pages/borrowers/create.php" class="btn btn-outline-primary">
-                            <i class="bi bi-person-plus me-2"></i>Neuer Kreditnehmer
+                            <i class="bi bi-person-plus me-2"></i><?= t('dashboard.new_borrower') ?>
                         </a>
                     </div>
                     <?php endif; ?>
                     <?php if (Auth::can('import', 'upload')): ?>
                     <div class="col-auto">
                         <a href="<?= APP_URL ?>/pages/import/upload.php" class="btn btn-outline-primary">
-                            <i class="bi bi-upload me-2"></i>Kontoauszug importieren
+                            <i class="bi bi-upload me-2"></i><?= t('dashboard.import_statement') ?>
                         </a>
                     </div>
                     <?php endif; ?>
                     <?php if (Auth::can('loans', 'view')): ?>
                     <div class="col-auto">
                         <a href="<?= APP_URL ?>/pages/loans/index.php" class="btn btn-outline-secondary">
-                            <i class="bi bi-list me-2"></i>Alle Kredite
+                            <i class="bi bi-list me-2"></i><?= t('dashboard.all_loans') ?>
                         </a>
                     </div>
                     <?php endif; ?>
                     <div class="col-auto">
                         <a href="<?= APP_URL ?>/pages/safeboxes/create.php" class="btn btn-outline-primary">
-                            <i class="bi bi-safe me-2"></i>Neues Schließfach
+                            <i class="bi bi-safe me-2"></i><?= t('dashboard.new_safebox') ?>
                         </a>
                     </div>
                     <?php if ($bid === 2): ?>
                     <div class="col-auto">
                         <a href="<?= APP_URL ?>/pages/insurance/create.php" class="btn btn-outline-primary">
-                            <i class="bi bi-heart-pulse me-2"></i>Neuer KV-Vertrag
+                            <i class="bi bi-heart-pulse me-2"></i><?= t('dashboard.new_kv_contract') ?>
                         </a>
                     </div>
                     <?php endif; ?>
                     <div class="col-auto">
                         <a href="<?= APP_URL ?>/pages/reports/index.php" class="btn btn-outline-secondary">
-                            <i class="bi bi-bar-chart-line me-2"></i>Berichte
+                            <i class="bi bi-bar-chart-line me-2"></i><?= t('dashboard.reports') ?>
                         </a>
                     </div>
                 </div>

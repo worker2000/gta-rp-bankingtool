@@ -9,6 +9,7 @@ require_once __DIR__ . '/includes/auth.php';
 require_once __DIR__ . '/includes/functions.php';
 
 Auth::init();
+loadLanguage($_SESSION['lang'] ?? 'de');
 
 if (Auth::check()) {
     header('Location: ' . APP_URL . '/pages/dashboard.php');
@@ -30,12 +31,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $bankId   = (int)($_POST['bank_id'] ?? 1);
 
     if (empty($username) || empty($password)) {
-        $error = 'Bitte Benutzername und Passwort eingeben.';
+        $error = t('login.error_empty');
     } elseif (Auth::login($username, $password, $bankId)) {
         header('Location: ' . $redirect);
         exit;
     } else {
-        $error = 'Ungültiger Benutzername oder Passwort.';
+        $error = t('login.error_invalid');
     }
 }
 
@@ -55,11 +56,11 @@ $gridCols   = match(true) {
 };
 ?>
 <!DOCTYPE html>
-<html lang="de" data-bs-theme="dark">
+<html lang="<?= currentLang() === 'en' ? 'en' : 'de' ?>" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anmeldung</title>
+    <title><?= t('login.submit') ?> – <?= t('login.financial_group') ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     <link href="<?= APP_URL ?>/assets/css/style.css" rel="stylesheet">
@@ -244,16 +245,16 @@ $gridCols   = match(true) {
 
         <div class="login-header">
             <div class="icon-wrap"><i class="bi bi-bank2"></i></div>
-            <h1>Finanzgruppe</h1>
-            <p>Institution wählen</p>
+            <h1><?= t('login.financial_group') ?></h1>
+            <p><?= t('login.select_institution') ?></p>
         </div>
 
         <!-- ══ Schritt 1: Bank-Auswahl ══ -->
         <div id="bank-selector">
             <?php if (empty($availableBanks)): ?>
             <div class="alert alert-warning text-center">
-                Keine aktiven Banken konfiguriert.<br>
-                <a href="<?= APP_URL ?>/pages/admin/index.php" class="alert-link">Zur Administration</a>
+                <?= t('login.no_banks') ?><br>
+                <a href="<?= APP_URL ?>/pages/admin/index.php" class="alert-link"><?= t('login.to_admin') ?></a>
             </div>
             <?php else: ?>
             <div class="bank-grid">
@@ -300,7 +301,7 @@ $gridCols   = match(true) {
                     <?= $selectedBank ? e($selectedBank['name']) : '' ?>
                 </span>
                 <button type="button" class="back-btn" id="back-btn">
-                    <i class="bi bi-arrow-left"></i> Wechseln
+                    <i class="bi bi-arrow-left"></i> <?= t('login.change_bank') ?>
                 </button>
             </div>
 
@@ -315,7 +316,7 @@ $gridCols   = match(true) {
                 <input type="hidden" name="bank_id"  value="<?= $selectedBank ? $selectedBank['id'] : '' ?>" id="bank-id-field">
 
                 <div class="mb-3">
-                    <label for="username" class="form-label">Benutzername</label>
+                    <label for="username" class="form-label"><?= t('login.username') ?></label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-person"></i></span>
                         <input type="text" class="form-control" id="username" name="username"
@@ -325,7 +326,7 @@ $gridCols   = match(true) {
                 </div>
 
                 <div class="mb-4">
-                    <label for="password" class="form-label">Passwort</label>
+                    <label for="password" class="form-label"><?= t('login.password') ?></label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-lock"></i></span>
                         <input type="password" class="form-control" id="password" name="password"
@@ -334,18 +335,33 @@ $gridCols   = match(true) {
                 </div>
 
                 <button type="submit" class="btn-login">
-                    <i class="bi bi-box-arrow-in-right me-2"></i>Anmelden
+                    <i class="bi bi-box-arrow-in-right me-2"></i><?= t('login.submit') ?>
                 </button>
             </form>
 
             <div class="admin-link">
                 <a href="<?= APP_URL ?>/pages/admin/login.php">
-                    <i class="bi bi-shield-lock"></i>Administration
+                    <i class="bi bi-shield-lock"></i><?= t('login.admin_link') ?>
                 </a>
             </div>
         </div>
 
     </div>
+</div>
+
+<!-- Sprachumschalter (Login-Seite, unten rechts – dynamisch: alle lang/*.php werden erkannt) -->
+<div style="position:fixed;bottom:1rem;right:1rem;display:flex;gap:0.4rem;z-index:99;">
+    <?php
+    $loginLangs = array_map(
+        fn($f) => basename($f, '.php'),
+        glob(__DIR__ . '/lang/*.php') ?: []
+    );
+    foreach ($loginLangs as $l):
+    ?>
+    <a href="<?= APP_URL ?>/pages/set_lang.php?lang=<?= $l ?>"
+       class="btn btn-sm <?= currentLang() === $l ? 'btn-primary' : 'btn-outline-secondary' ?>"
+       style="font-size:0.78rem;padding:0.2rem 0.6rem;"><?= strtoupper($l) ?></a>
+    <?php endforeach; ?>
 </div>
 
 <script>

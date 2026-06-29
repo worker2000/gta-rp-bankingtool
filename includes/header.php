@@ -14,20 +14,24 @@ require_once __DIR__ . '/../includes/functions.php';
 LicenseManager::check();
 Auth::init();
 
+// Sprache laden (Session-basiert, Fallback: Deutsch)
+loadLanguage($_SESSION['lang'] ?? 'de');
+
 $currentUser = Auth::user();
 $currentPage = basename($_SERVER['PHP_SELF'], '.php');
 $bank        = Auth::bank();
 $bankId      = Auth::bankId();
+$htmlLang    = currentLang() === 'en' ? 'en' : 'de';
 
 // CSS-Klasse für Bank-Theme
 $bankClass = $bankId === 2 ? 'bank-ff' : 'bank-psb';
 ?>
 <!DOCTYPE html>
-<html lang="de" data-bs-theme="dark">
+<html lang="<?= $htmlLang ?>" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= e($pageTitle ?? 'Kreditverwaltung') ?> – <?= e($bank['name'] ?? APP_NAME) ?></title>
+    <title><?= e($pageTitle ?? t('common.kreditverwaltung')) ?> – <?= e($bank['name'] ?? APP_NAME) ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     <link href="<?= APP_URL ?>/assets/css/style.css" rel="stylesheet">
@@ -79,7 +83,7 @@ $bankClass = $bankId === 2 ? 'bank-ff' : 'bank-psb';
                 <li class="nav-item">
                     <a class="nav-link <?= $currentPage === 'dashboard' ? 'active' : '' ?>"
                        href="<?= APP_URL ?>/pages/dashboard.php">
-                        <i class="bi bi-speedometer2 me-1"></i>Dashboard
+                        <i class="bi bi-speedometer2 me-1"></i><?= t('nav.dashboard') ?>
                     </a>
                 </li>
                 <?php if (Auth::can('loans', 'view')): ?>
@@ -95,7 +99,7 @@ $bankClass = $bankId === 2 ? 'bank-ff' : 'bank-psb';
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle <?= str_starts_with($_SERVER['REQUEST_URI'], APP_URL.'/pages/loans') ? 'active' : '' ?>"
                        href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-file-earmark-text me-1"></i>Kredite
+                        <i class="bi bi-file-earmark-text me-1"></i><?= t('nav.loans') ?>
                         <?php if ($pendingRefsCount > 0): ?>
                         <span class="badge bg-warning text-dark ms-1"><?= $pendingRefsCount ?></span>
                         <?php endif; ?>
@@ -103,14 +107,14 @@ $bankClass = $bankId === 2 ? 'bank-ff' : 'bank-psb';
                     <ul class="dropdown-menu dropdown-menu-dark">
                         <li>
                             <a class="dropdown-item" href="<?= APP_URL ?>/pages/loans/index.php">
-                                <i class="bi bi-list-ul me-2"></i>Alle Kredite
+                                <i class="bi bi-list-ul me-2"></i><?= t('nav.loans.all') ?>
                             </a>
                         </li>
                         <?php if (Auth::can('import', 'upload') && $pendingRefsCount > 0): ?>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <a class="dropdown-item" href="<?= APP_URL ?>/pages/loans/pending_refs.php">
-                                <i class="bi bi-hourglass-split me-2 text-warning"></i>Ausstehende Referenzen
+                                <i class="bi bi-hourglass-split me-2 text-warning"></i><?= t('nav.loans.pending_refs') ?>
                                 <span class="badge bg-warning text-dark ms-1"><?= $pendingRefsCount ?></span>
                             </a>
                         </li>
@@ -122,27 +126,27 @@ $bankClass = $bankId === 2 ? 'bank-ff' : 'bank-psb';
                 <li class="nav-item">
                     <a class="nav-link <?= str_starts_with($_SERVER['REQUEST_URI'], APP_URL.'/pages/borrowers') ? 'active' : '' ?>"
                        href="<?= APP_URL ?>/pages/borrowers/index.php">
-                        <i class="bi bi-people me-1"></i>Kreditnehmer
+                        <i class="bi bi-people me-1"></i><?= t('nav.borrowers') ?>
                     </a>
                 </li>
                 <?php endif; ?>
                 <li class="nav-item">
                     <a class="nav-link <?= str_starts_with($_SERVER['REQUEST_URI'], APP_URL.'/pages/accounts') ? 'active' : '' ?>"
                        href="<?= APP_URL ?>/pages/accounts/index.php">
-                        <i class="bi bi-wallet2 me-1"></i>Konten
+                        <i class="bi bi-wallet2 me-1"></i><?= t('nav.accounts') ?>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link <?= str_starts_with($_SERVER['REQUEST_URI'], APP_URL.'/pages/documents') ? 'active' : '' ?>"
                        href="<?= APP_URL ?>/pages/documents/index.php">
-                        <i class="bi bi-folder2-open me-1"></i>Schreiben
+                        <i class="bi bi-folder2-open me-1"></i><?= t('nav.documents') ?>
                     </a>
                 </li>
                 <?php if (Auth::can('import', 'upload')): ?>
                 <li class="nav-item">
                     <a class="nav-link <?= str_starts_with($_SERVER['REQUEST_URI'], APP_URL.'/pages/import') ? 'active' : '' ?>"
                        href="<?= APP_URL ?>/pages/import/index.php">
-                        <i class="bi bi-upload me-1"></i>Import
+                        <i class="bi bi-upload me-1"></i><?= t('nav.import') ?>
                     </a>
                 </li>
                 <?php endif; ?>
@@ -150,7 +154,7 @@ $bankClass = $bankId === 2 ? 'bank-ff' : 'bank-psb';
                 <li class="nav-item">
                     <a class="nav-link <?= str_starts_with($_SERVER['REQUEST_URI'], APP_URL.'/pages/collections') ? 'active' : '' ?>"
                        href="<?= APP_URL ?>/pages/collections/index.php">
-                        <i class="bi bi-exclamation-triangle me-1"></i>Mahnwesen
+                        <i class="bi bi-exclamation-triangle me-1"></i><?= t('nav.collections') ?>
                     </a>
                 </li>
                 <?php endif; ?>
@@ -158,19 +162,19 @@ $bankClass = $bankId === 2 ? 'bank-ff' : 'bank-psb';
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle <?= str_starts_with($_SERVER['REQUEST_URI'], APP_URL.'/pages/insurance') ? 'active' : '' ?>"
                        href="#" data-bs-toggle="dropdown" role="button" aria-expanded="false">
-                        <i class="bi bi-heart-pulse me-1"></i>Krankenversicherung
+                        <i class="bi bi-heart-pulse me-1"></i><?= t('nav.insurance') ?>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-dark">
                         <li>
                             <a class="dropdown-item <?= str_starts_with($_SERVER['REQUEST_URI'], APP_URL.'/pages/insurance/index') || (str_starts_with($_SERVER['REQUEST_URI'], APP_URL.'/pages/insurance/') && !str_contains($_SERVER['REQUEST_URI'], '/employers') && !str_contains($_SERVER['REQUEST_URI'], '/group')) ? 'active' : '' ?>"
                                href="<?= APP_URL ?>/pages/insurance/index.php">
-                                <i class="bi bi-person-vcard me-2"></i>Einzelverträge
+                                <i class="bi bi-person-vcard me-2"></i><?= t('nav.insurance.contracts') ?>
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item <?= str_contains($_SERVER['REQUEST_URI'], '/insurance/employers') || str_contains($_SERVER['REQUEST_URI'], '/insurance/group') ? 'active' : '' ?>"
                                href="<?= APP_URL ?>/pages/insurance/employers/index.php">
-                                <i class="bi bi-building me-2"></i>Arbeitgeber
+                                <i class="bi bi-building me-2"></i><?= t('nav.insurance.employers') ?>
                             </a>
                         </li>
                     </ul>
@@ -179,13 +183,13 @@ $bankClass = $bankId === 2 ? 'bank-ff' : 'bank-psb';
                 <li class="nav-item">
                     <a class="nav-link <?= str_starts_with($_SERVER['REQUEST_URI'], APP_URL.'/pages/safeboxes') ? 'active' : '' ?>"
                        href="<?= APP_URL ?>/pages/safeboxes/index.php">
-                        <i class="bi bi-safe me-1"></i>Schließfächer
+                        <i class="bi bi-safe me-1"></i><?= t('nav.safeboxes') ?>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link <?= str_starts_with($_SERVER['REQUEST_URI'], APP_URL.'/pages/reports') ? 'active' : '' ?>"
                        href="<?= APP_URL ?>/pages/reports/index.php">
-                        <i class="bi bi-bar-chart-line me-1"></i>Berichte
+                        <i class="bi bi-bar-chart-line me-1"></i><?= t('nav.reports') ?>
                     </a>
                 </li>
                 <?php if (Auth::can('loans', 'view')): ?>
@@ -193,7 +197,7 @@ $bankClass = $bankId === 2 ? 'bank-ff' : 'bank-psb';
                     <a class="nav-link <?= str_starts_with($_SERVER['REQUEST_URI'], APP_URL.'/pages/schufa') ? 'active' : '' ?>"
                        href="<?= APP_URL ?>/pages/schufa/index.php"
                        title="Interbanken-Kreditauskunft">
-                        <i class="bi bi-shield-check me-1"></i>Kreditauskunft
+                        <i class="bi bi-shield-check me-1"></i><?= t('nav.credit_check') ?>
                     </a>
                 </li>
                 <?php endif; ?>
@@ -238,17 +242,17 @@ $bankClass = $bankId === 2 ? 'bank-ff' : 'bank-psb';
                         <?php if (Auth::hasRole('director') || Auth::isSuperAdmin()): ?>
                         <li>
                             <a class="dropdown-item" href="<?= APP_URL ?>/pages/settings/index.php">
-                                <i class="bi bi-gear me-2"></i>Einstellungen
+                                <i class="bi bi-gear me-2"></i><?= t('nav.settings') ?>
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="<?= APP_URL ?>/pages/users/index.php">
-                                <i class="bi bi-people-fill me-2"></i>Benutzer
+                                <i class="bi bi-people-fill me-2"></i><?= t('nav.users') ?>
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="<?= APP_URL ?>/pages/templates/index.php">
-                                <i class="bi bi-file-text me-2"></i>Textvorlagen
+                                <i class="bi bi-file-text me-2"></i><?= t('nav.templates') ?>
                             </a>
                         </li>
                         <?php if (Auth::isSuperAdmin()): ?>
@@ -260,7 +264,7 @@ $bankClass = $bankId === 2 ? 'bank-ff' : 'bank-psb';
                         <li>
                             <a class="dropdown-item d-flex justify-content-between align-items-center"
                                href="<?= APP_URL ?>/pages/reports/support_cases.php">
-                                <span><i class="bi bi-headset me-2"></i>Support-Fälle</span>
+                                <span><i class="bi bi-headset me-2"></i><?= t('nav.support_cases') ?></span>
                                 <?php if ($supportCount > 0): ?>
                                 <span class="badge bg-warning text-dark"><?= $supportCount ?></span>
                                 <?php endif; ?>
@@ -270,15 +274,33 @@ $bankClass = $bankId === 2 ? 'bank-ff' : 'bank-psb';
                         <li>
                             <a class="dropdown-item <?= str_starts_with($_SERVER['REQUEST_URI'], APP_URL.'/pages/admin') ? 'active' : '' ?>"
                                href="<?= APP_URL ?>/pages/admin/index.php">
-                                <i class="bi bi-shield-lock-fill me-2 text-danger"></i>Administration
+                                <i class="bi bi-shield-lock-fill me-2 text-danger"></i><?= t('nav.admin') ?>
                             </a>
                         </li>
                         <?php endif; ?>
                         <li><hr class="dropdown-divider"></li>
                         <?php endif; ?>
+                        <li><hr class="dropdown-divider"></li>
+                        <!-- Sprachumschalter (dynamisch: alle lang/*.php werden erkannt) -->
+                        <li class="px-2 py-1">
+                            <div class="d-flex gap-1 align-items-center flex-wrap">
+                                <small class="text-muted me-1"><i class="bi bi-translate"></i></small>
+                                <?php
+                                $availLangs = array_map(
+                                    fn($f) => basename($f, '.php'),
+                                    glob(__DIR__ . '/../lang/*.php') ?: []
+                                );
+                                foreach ($availLangs as $l):
+                                ?>
+                                <a href="<?= APP_URL ?>/pages/set_lang.php?lang=<?= $l ?>"
+                                   class="btn btn-xs py-0 px-2 <?= currentLang() === $l ? 'btn-primary' : 'btn-outline-secondary' ?>"
+                                   style="font-size:0.75rem;"><?= strtoupper($l) ?></a>
+                                <?php endforeach; ?>
+                            </div>
+                        </li>
                         <li>
                             <a class="dropdown-item" href="<?= APP_URL ?>/logout.php">
-                                <i class="bi bi-box-arrow-right me-2"></i>Abmelden
+                                <i class="bi bi-box-arrow-right me-2"></i><?= t('nav.logout') ?>
                             </a>
                         </li>
                     </ul>

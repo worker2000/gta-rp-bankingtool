@@ -40,10 +40,10 @@ $borrowers = Database::fetchAll("
 ?>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h4><i class="bi bi-people me-2"></i>Kreditnehmer</h4>
+    <h4><i class="bi bi-people me-2"></i><?= t('borrowers.title') ?></h4>
     <?php if (Auth::can('borrowers', 'create')): ?>
     <a href="<?= APP_URL ?>/pages/borrowers/create.php" class="btn btn-primary">
-        <i class="bi bi-person-plus me-2"></i>Neuer Kreditnehmer
+        <i class="bi bi-person-plus me-2"></i><?= t('borrowers.new') ?>
     </a>
     <?php endif; ?>
 </div>
@@ -57,13 +57,13 @@ $borrowers = Database::fetchAll("
                     <span class="input-group-text"><i class="bi bi-search"></i></span>
                     <input type="text" class="form-control" name="search"
                            value="<?= e($search) ?>"
-                           placeholder="Suche nach Name, Kundennummer, alter Kundennr., E-Mail, Telefon...">
+                           placeholder="<?= t('borrowers.search_placeholder') ?>">
                 </div>
             </div>
             <div class="col-md-4">
-                <button type="submit" class="btn btn-outline-primary me-2">Suchen</button>
+                <button type="submit" class="btn btn-outline-primary me-2"><?= t('borrowers.search') ?></button>
                 <?php if ($search): ?>
-                <a href="<?= APP_URL ?>/pages/borrowers/index.php" class="btn btn-outline-secondary">Zurücksetzen</a>
+                <a href="<?= APP_URL ?>/pages/borrowers/index.php" class="btn btn-outline-secondary"><?= t('borrowers.reset') ?></a>
                 <?php endif; ?>
             </div>
         </form>
@@ -76,9 +76,9 @@ $borrowers = Database::fetchAll("
         <?php if (empty($borrowers)): ?>
         <div class="empty-state">
             <i class="bi bi-people"></i>
-            <p>Keine Kreditnehmer gefunden</p>
+            <p><?= t('borrowers.none_found') ?></p>
             <?php if (Auth::can('borrowers', 'create')): ?>
-            <a href="<?= APP_URL ?>/pages/borrowers/create.php" class="btn btn-primary">Ersten Kreditnehmer anlegen</a>
+            <a href="<?= APP_URL ?>/pages/borrowers/create.php" class="btn btn-primary"><?= t('borrowers.create_first') ?></a>
             <?php endif; ?>
         </div>
         <?php else: ?>
@@ -86,12 +86,12 @@ $borrowers = Database::fetchAll("
             <table class="table table-hover mb-0" id="borrowersTable">
                 <thead>
                     <tr>
-                        <th>Kundennummer</th>
-                        <th>Name</th>
-                        <th>Kontakt</th>
-                        <th>Wocheneinkommen</th>
-                        <th>Kredite</th>
-                        <th class="text-end">Aktionen</th>
+                        <th><?= t('borrowers.customer_number') ?></th>
+                        <th><?= t('borrowers.name') ?></th>
+                        <th><?= t('borrowers.contact') ?></th>
+                        <th><?= t('borrowers.weekly_income') ?></th>
+                        <th><?= t('borrowers.loans') ?></th>
+                        <th class="text-end"><?= t('borrowers.actions') ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -102,7 +102,7 @@ $borrowers = Database::fetchAll("
                                 <?= e($borrower['customer_number']) ?>
                             </a>
                             <?php if (!empty($borrower['legacy_customer_number'])): ?>
-                            <br><small class="text-muted" title="Alte Kundennummer (Vorsystem)">
+                            <br><small class="text-muted" title="<?= t('borrowers.old_number') ?>">
                                 <i class="bi bi-clock-history me-1"></i><?= e($borrower['legacy_customer_number']) ?>
                             </small>
                             <?php endif; ?>
@@ -121,10 +121,10 @@ $borrowers = Database::fetchAll("
                         <td><?= $borrower['weekly_income'] ? formatMoney($borrower['weekly_income']) : '-' ?></td>
                         <td>
                             <?php if ($borrower['active_loans'] > 0): ?>
-                            <span class="badge bg-success"><?= $borrower['active_loans'] ?> aktiv</span>
+                            <span class="badge bg-success"><?= $borrower['active_loans'] ?> <?= t('borrowers.active') ?></span>
                             <?php endif; ?>
                             <?php if ($borrower['loan_count'] > $borrower['active_loans']): ?>
-                            <span class="badge bg-secondary"><?= $borrower['loan_count'] - $borrower['active_loans'] ?> andere</span>
+                            <span class="badge bg-secondary"><?= $borrower['loan_count'] - $borrower['active_loans'] ?> <?= t('borrowers.other') ?></span>
                             <?php endif; ?>
                             <?php if ($borrower['loan_count'] === 0): ?>
                             <span class="text-muted">-</span>
@@ -160,7 +160,7 @@ $borrowers = Database::fetchAll("
             <nav>
                 <ul class="pagination pagination-sm mb-0 justify-content-center">
                     <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
-                        <a class="page-link" href="?page=<?= $page - 1 ?>&search=<?= urlencode($search) ?>">Zurück</a>
+                        <a class="page-link" href="?page=<?= $page - 1 ?>&search=<?= urlencode($search) ?>"><?= t('pagination.back') ?></a>
                     </li>
                     <?php for ($i = max(1, $page - 2); $i <= min($totalPages, $page + 2); $i++): ?>
                     <li class="page-item <?= $i === $page ? 'active' : '' ?>">
@@ -168,7 +168,7 @@ $borrowers = Database::fetchAll("
                     </li>
                     <?php endfor; ?>
                     <li class="page-item <?= $page >= $totalPages ? 'disabled' : '' ?>">
-                        <a class="page-link" href="?page=<?= $page + 1 ?>&search=<?= urlencode($search) ?>">Weiter</a>
+                        <a class="page-link" href="?page=<?= $page + 1 ?>&search=<?= urlencode($search) ?>"><?= t('pagination.next') ?></a>
                     </li>
                 </ul>
             </nav>
@@ -179,7 +179,7 @@ $borrowers = Database::fetchAll("
 </div>
 
 <div class="mt-3 text-muted small">
-    Gesamt: <?= $totalCount ?> Kreditnehmer
+    <?= t('borrowers.total') ?>: <?= $totalCount ?> <?= t('borrowers.title') ?>
 </div>
 
 <?php require_once __DIR__ . '/../../includes/footer.php'; ?>
